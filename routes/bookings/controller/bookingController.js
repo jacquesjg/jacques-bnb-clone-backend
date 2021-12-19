@@ -125,14 +125,12 @@ async function updateBookingById(req, res) {
 async function deleteBookingById(req, res) {
   try {
     const deletedBooking = await Booking.findByIdAndRemove(req.params.id);
-
     if (!deletedBooking) {
       return res
         .status(404)
         .json({ message: "failure", error: "Booking not found" });
     } else {
       const decodedData = res.locals.decodedData;
-      console.log(decodedData)
       const foundUser = await User.findOne({ email: decodedData.email });
       const userBookingHistoryArray = foundUser.bookedTrips;
       const filteredBookingHistoryArray = userBookingHistoryArray.filter(
@@ -142,7 +140,6 @@ async function deleteBookingById(req, res) {
       foundUser.bookedTrips = filteredBookingHistoryArray;
       await foundUser.save();
 
-      console.log(139)
       res.json({
         message: "success",
         deleted: deletedBooking,
